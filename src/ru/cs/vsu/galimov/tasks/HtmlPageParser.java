@@ -5,7 +5,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HtmlPageParser {
     private static final String mainURL = "http://www.vestnik.vsu.ru/index_ru.asp";
@@ -13,6 +17,7 @@ public class HtmlPageParser {
     private static final Map<String, String> selectOptionsArchives = new HashMap<>();
     private static final Map<String, String> selectOptionsArchivesByDate = new HashMap<>();
     private static final Map<String, String> selectOptionsPDFLinks = new HashMap<>();
+    private static final Map<String, String> selectOptionsPDFDownload = new HashMap<>();
     public static HtmlPageParser INSTANCE;
 
     public static HtmlPageParser getINSTANCE() {
@@ -24,6 +29,9 @@ public class HtmlPageParser {
             selectOptionsArchivesByDate.put("type1", "a.title");
             selectOptionsArchivesByDate.put("type2", "table a[href]");
             selectOptionsPDFLinks.put("type1", ".obj_galley_link.pdf");
+            selectOptionsPDFLinks.put("type2", "li a:containsOwn(Текст (PDF))");
+            selectOptionsPDFDownload.put("type1", "a.download");
+            selectOptionsPDFDownload.put("type2", "#plugin");
         }
         return INSTANCE;
     }
@@ -67,6 +75,40 @@ public class HtmlPageParser {
         return new ArrayList<>();
     }
 
+    private String parse(String url, String selectOption) {
+        try {
+            Document document = Jsoup.connect(url).get();
+
+            // Преобразование HTML-кода в строку
+            String htmlContent = document.outerHtml();
+
+            // Путь к файлу, в который мы хотим сохранить HTML-код
+            String filePath = "output.html";
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                writer.write(htmlContent);
+            }
+//            Document document = Jsoup.connect(url).get();
+//
+//            String html = Jsoup.connect(url).ignoreContentType(true).execute().body();
+//
+//            // Регулярное выражение для извлечения ссылки на PDF
+//            String regex = "original-url=\"([^\"]+)\"";
+//            Pattern pattern = Pattern.compile(regex);
+//            Matcher matcher = pattern.matcher(html);
+//
+//            // Поиск и вывод ссылки на PDF
+//            if (matcher.find()) {
+//                String pdfUrl = matcher.group(1);
+//                System.out.println("Ссылка на PDF: " + pdfUrl);
+//                return pdfUrl;
+//            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     public String parseJournalArchive(SubMagazine journal) {
         String result = "";
 
@@ -104,12 +146,26 @@ public class HtmlPageParser {
         return result;
     }
 
-    public List<String> parsePDFLinks(String datedArchiveURL, SubMagazine magazine) {
+    public List<String> parsePDFPage(String datedArchiveURL, SubMagazine magazine) {
         List<String> allArchivesByDate = new ArrayList<>();
 
         if (Objects.equals(magazine.getType(), "type1")) {
             allArchivesByDate = parsePage(datedArchiveURL, selectOptionsPDFLinks.get("type1"));
         }
+        else {
+            for (String page: parsePage(datedArchiveURL, selectOptionsPDFLinks.get("type2"))) {
+                allArchivesByDate.add(greetingURL + page);
+            }
+        }
         return allArchivesByDate;
+    }
+
+    public String parsePDFDownloadLink(String url, SubMagazine magazine){
+        if (Objects.equals(magazine.getType(), "type1")) {
+            return parsePage(url, selectOptionsPDFDownload.get("type1")).get(0);
+        }
+        else{
+            return parse(url, selectOptionsPDFDownload.get("type2"));
+        }
     }
 }
