@@ -1,17 +1,13 @@
-package ru.cs.vsu.galimov.tasks;
+package ru.cs.vsu.galimov.tasks.model;
 
 import java.util.List;
 
-public class SubMagazine {
+public class InnerMagazine {
     private final String name;
 
     private final String URL;
 
     private String type;
-
-    private String selectOptionArchive;
-
-    private String selectOptionArchivesByDate;
 
     private String archive;
 
@@ -19,7 +15,9 @@ public class SubMagazine {
 
     private List<String> allPdfLinks;
 
-    public SubMagazine(String name, String url) {
+    private List<String> allPDFs;
+
+    public InnerMagazine(String name, String url) {
         this.name = name;
         this.URL = url;
     }
@@ -38,22 +36,6 @@ public class SubMagazine {
 
     public String getURL() {
         return URL;
-    }
-
-    public String getSelectOptionArchive() {
-        return selectOptionArchive;
-    }
-
-    public void setSelectOptionArchive(String selectOptionArchive) {
-        this.selectOptionArchive = selectOptionArchive;
-    }
-
-    public String getSelectOptionArchivesByDate() {
-        return selectOptionArchivesByDate;
-    }
-
-    public void setSelectOptionArchivesByDate(String selectOptionArchivesByDate) {
-        this.selectOptionArchivesByDate = selectOptionArchivesByDate;
     }
 
     public List<String> getArchivesByDate() {
@@ -80,14 +62,21 @@ public class SubMagazine {
         this.type = type;
     }
 
+    public List<String> getAllPDFs() {
+        return allPDFs;
+    }
+
+    public void setAllPDFs(List<String> allPDFs) {
+        this.allPDFs = allPDFs;
+    }
+
     @Override
     public String toString() {
-        return "SubMagazine{" +
+        return "InnerMagazine{" +
                 "name='" + name + '\'' +
                 ", URL='" + URL + '\'' +
                 ", type='" + type + '\'' +
-                ", selectOptionArchive='" + selectOptionArchive + '\'' +
-                ", selectOptionArchivesByDate='" + selectOptionArchivesByDate + '\'' +
+                ", archive='" + archive + '\'' +
                 ", archivesByDate=" + archivesByDate +
                 ", allPdfLinks=" + allPdfLinks +
                 '}';

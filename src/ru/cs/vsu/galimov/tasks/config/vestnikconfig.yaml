@@ -1,0 +1,13 @@
+mainURL:
+  opt: "div.col-md-8 a[href]"
+selectOptionsArchives:
+  type1: ".read_more"
+  type2: "a:contains(Архив номеров)"
+selectOptionsArchivesByDate:
+  type1: "a.title"
+  type2: "table a[href]"
+selectOptionsPDFLinks:
+  type1: ".obj_galley_link.pdf"
+  type2: "li a:containsOwn(Текст (PDF))"
+selectOptionsPDFDownload:
+  type1: "a.download"
