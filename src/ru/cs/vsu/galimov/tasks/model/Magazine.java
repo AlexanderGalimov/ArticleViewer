@@ -5,7 +5,7 @@ import ru.cs.vsu.galimov.tasks.config.Config;
 import java.util.List;
 
 public class Magazine {
-    private List<InnerMagazine> innerMagazines;
+    private List<DepartmentMagazine> innerMagazines;
     private final Config config;
 
     public Magazine(String mainURL) {
@@ -16,11 +16,11 @@ public class Magazine {
         return config;
     }
 
-    public void setInnerMagazines(List<InnerMagazine> innerMagazines) {
+    public void setInnerMagazines(List<DepartmentMagazine> innerMagazines) {
         this.innerMagazines = innerMagazines;
     }
 
-    public List<InnerMagazine> getInnerMagazines() {
+    public List<DepartmentMagazine> getInnerMagazines() {
         return innerMagazines;
     }
 

@@ -2,7 +2,7 @@ package ru.cs.vsu.galimov.tasks.model;
 
 import java.util.List;
 
-public class InnerMagazine {
+public class DepartmentMagazine {
     private final String name;
 
     private final String URL;
@@ -17,7 +17,7 @@ public class InnerMagazine {
 
     private List<String> allPDFs;
 
-    public InnerMagazine(String name, String url) {
+    public DepartmentMagazine(String name, String url) {
         this.name = name;
         this.URL = url;
     }

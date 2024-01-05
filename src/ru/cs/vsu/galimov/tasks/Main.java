@@ -1,6 +1,6 @@
 package ru.cs.vsu.galimov.tasks;
 
-import ru.cs.vsu.galimov.tasks.model.InnerMagazine;
+import ru.cs.vsu.galimov.tasks.model.DepartmentMagazine;
 import ru.cs.vsu.galimov.tasks.model.Magazine;
 import ru.cs.vsu.galimov.tasks.parser.VestnikHtmlPageParser;
 
@@ -21,30 +21,30 @@ public class Main {
 
         List<String> journals = pageParser.getAllMagazinesURLs(journalsURlPieces);
 
-        List<InnerMagazine> innerMagazines = new ArrayList<>();
+        List<DepartmentMagazine> departmentMagazines = new ArrayList<>();
 
         for (int i = 0; i < journals.size(); i++) {
-            innerMagazines.add(new InnerMagazine(names.get(i), journals.get(i)));
+            departmentMagazines.add(new DepartmentMagazine(names.get(i), journals.get(i)));
         }
 
-        for (InnerMagazine innerMagazine : innerMagazines) {
+        for (DepartmentMagazine innerMagazine : departmentMagazines) {
             innerMagazine.setArchive(pageParser.parseJournalArchive(innerMagazine));
         }
 
-        for (int i = 0; i < innerMagazines.size(); i++) {
-            innerMagazines.get(i).setArchivesByDate(pageParser.parseArchiveByDates(innerMagazines.get(i), journalsURlPieces.get(i)));
+        for (int i = 0; i < departmentMagazines.size(); i++) {
+            departmentMagazines.get(i).setArchivesByDate(pageParser.parseArchiveByDates(departmentMagazines.get(i), journalsURlPieces.get(i)));
         }
 
         // 1 type 1st
         List<String> pdfLinks = new ArrayList<>();
 
-        for (int i = 0; i < innerMagazines.get(0).getArchivesByDate().size(); i++) {
-            pdfLinks.addAll(pageParser.parsePDFPage(innerMagazines.get(0).getArchivesByDate().get(i), innerMagazines.get(0)));
+        for (int i = 0; i < departmentMagazines.get(0).getArchivesByDate().size(); i++) {
+            pdfLinks.addAll(pageParser.parsePDFPage(departmentMagazines.get(0).getArchivesByDate().get(i), departmentMagazines.get(0)));
         }
 
         List<String> pdfs = new ArrayList<>();
         for (String link: pdfLinks) {
-            pdfs.add(pageParser.parsePDFDownloadLink(link, innerMagazines.get(0)));
+            pdfs.add(pageParser.parsePDFDownloadLink(link, departmentMagazines.get(0)));
         }
 
         System.out.println(pdfs);

@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.cs.vsu.galimov.tasks.model.InnerMagazine;
+import ru.cs.vsu.galimov.tasks.model.DepartmentMagazine;
 import ru.cs.vsu.galimov.tasks.model.Magazine;
 
 import java.util.*;
@@ -55,27 +55,27 @@ public class VestnikHtmlPageParser {
         return new ArrayList<>();
     }
 
-    public String parseJournalArchive(InnerMagazine innerMagazine) {
+    public String parseJournalArchive(DepartmentMagazine departmentMagazine) {
         String result = "";
 
-        List<String> archiveType1 = parsePage(innerMagazine.getURL(), magazine.getConfig().getOpts().get("selectOptionsArchives").get("type1"));
+        List<String> archiveType1 = parsePage(departmentMagazine.getURL(), magazine.getConfig().getOpts().get("selectOptionsArchives").get("type1"));
 
-        List<String> archiveType2 = parsePage(innerMagazine.getURL(), magazine.getConfig().getOpts().get("selectOptionsArchives").get("type2"));
+        List<String> archiveType2 = parsePage(departmentMagazine.getURL(), magazine.getConfig().getOpts().get("selectOptionsArchives").get("type2"));
 
         if (!archiveType1.isEmpty()) {
-            innerMagazine.setType("type1");
+            departmentMagazine.setType("type1");
             result = archiveType1.get(0);
         } else if (!archiveType2.isEmpty()) {
-            innerMagazine.setType("type2");
+            departmentMagazine.setType("type2");
             result = magazine.getConfig().getMainUrl() + archiveType2.get(0);
         }
         return result;
     }
 
-    public List<String> parseArchiveByDates(InnerMagazine innerMagazine, String content) {
-        List<String> archives = parsePage(innerMagazine.getArchive(), magazine.getConfig().getOpts().get("selectOptionsArchivesByDate").get(innerMagazine.getType()));
+    public List<String> parseArchiveByDates(DepartmentMagazine departmentMagazine, String content) {
+        List<String> archives = parsePage(departmentMagazine.getArchive(), magazine.getConfig().getOpts().get("selectOptionsArchivesByDate").get(departmentMagazine.getType()));
 
-        if (Objects.equals(innerMagazine.getType(), "type2")) {
+        if (Objects.equals(departmentMagazine.getType(), "type2")) {
             return makeURlArchives(content, archives);
         } else {
             return archives;
@@ -90,10 +90,10 @@ public class VestnikHtmlPageParser {
         return result;
     }
 
-    public List<String> parsePDFPage(String datedArchiveURL, InnerMagazine innerMagazine) {
+    public List<String> parsePDFPage(String datedArchiveURL, DepartmentMagazine departmentMagazine) {
         List<String> pdfLinksByDate = new ArrayList<>();
 
-        if (Objects.equals(innerMagazine.getType(), "type1")) {
+        if (Objects.equals(departmentMagazine.getType(), "type1")) {
             pdfLinksByDate = parsePage(datedArchiveURL, magazine.getConfig().getOpts().get("selectOptionsPDFLinks").get("type1"));
         }
         else {
@@ -104,8 +104,8 @@ public class VestnikHtmlPageParser {
         return pdfLinksByDate;
     }
 
-    public String parsePDFDownloadLink(String url, InnerMagazine innerMagazine){
-        if (Objects.equals(innerMagazine.getType(), "type1")) {
+    public String parsePDFDownloadLink(String url, DepartmentMagazine departmentMagazine){
+        if (Objects.equals(departmentMagazine.getType(), "type1")) {
             return parsePage(url, magazine.getConfig().getOpts().get("selectOptionsPDFDownload").get("type1")).get(0);
         }
         else {
